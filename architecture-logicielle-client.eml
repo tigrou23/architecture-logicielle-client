@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/out/test/architecture-logicielle-client"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="bttp2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/src/librairies/bttp2.jar!/"/>
+	</lib>
+</component>
