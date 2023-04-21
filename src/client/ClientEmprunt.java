@@ -3,7 +3,7 @@ package client;
 import java.io.IOException;
 
 public class ClientEmprunt extends Client{
-    private static final int port = 1002;
+    private static final int port = 1001;
 
     public ClientEmprunt() throws IOException {
         super(port);
