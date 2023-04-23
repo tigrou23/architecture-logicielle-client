@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.util.Properties;
 
+//TODO : je suis pas sur de l'archi. Je pense qu'on doit faire des Threads. À voir avec le prof
+
 public abstract class Client {
     private BufferedReader clavier;
     private Socket socket;
