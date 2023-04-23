@@ -17,7 +17,7 @@ public class ClientEmprunt extends Client{
     }
 
     public static void main(String[] args) throws IOException {
-        ClientRetour client = new ClientRetour();
+        ClientEmprunt client = new ClientEmprunt();
         client.lancer();
     }
 }

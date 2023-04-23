@@ -19,7 +19,6 @@ public class ClientRetour extends Client{
         ligne = Codage.decode(getSin().readLine());
         System.out.println(ligne);
 
-        System.out.print("-> ");
         ligne = getClavier().readLine();
         getSout().println(Codage.encode(ligne));
 

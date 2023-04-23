@@ -1,5 +1,7 @@
 package client;
 
+import codage.Codage;
+
 import java.io.IOException;
 
 public class ClientReservation extends Client{
@@ -12,12 +14,28 @@ public class ClientReservation extends Client{
     public void lancer() throws IOException {
 
         //TODO: faire le client reservation
+        System.out.println("*** Bienvenue dans le client de réservation de document ***");
+
+        String ligne;
+        ligne = Codage.decode(getSin().readLine());
+        System.out.println(ligne);
+
+        ligne = getClavier().readLine();
+        getSout().println(Codage.encode(ligne));
+
+        ligne = Codage.decode(getSin().readLine());
+        System.out.println(ligne);
+
+        ligne = getClavier().readLine();
+        getSout().println(Codage.encode(ligne));
+
+        System.out.println(Codage.decode(getSin().readLine()));
 
         fermer();
     }
 
     public static void main(String[] args) throws IOException {
-        ClientRetour client = new ClientRetour();
+        ClientReservation client = new ClientReservation();
         client.lancer();
     }
 }
