@@ -21,7 +21,7 @@ public abstract class Client {
         properties.load(inputStream);
         try {
             socket = new Socket(properties.getProperty("server.address"), port);
-            sin = new BufferedReader (new InputStreamReader(socket.getInputStream ( )));
+            sin = new BufferedReader (new InputStreamReader(socket.getInputStream()));
             sout = new PrintWriter (socket.getOutputStream ( ), true);
             System.out.println("Connecté au serveur " + socket.getInetAddress() + ":"+ socket.getPort());
         }
@@ -29,8 +29,8 @@ public abstract class Client {
             System.err.println("Impossible de se connecter au serveur");
             System.exit(1);
         }
-        try { if (socket != null) socket.close(); }
-        catch (IOException e2) { ; }
+        /*try { if (socket != null) socket.close(); } //TODO : ici ça fait planter le programme, à étudier
+        catch (IOException e2) { ; }*/
     }
 
     public void fermer() throws IOException {

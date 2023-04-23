@@ -11,10 +11,7 @@ public class ClientReservation extends Client{
 
     public void lancer() throws IOException {
 
-
-        /*
-        ici on fait notre échanges avec le serveur
-         */
+        //TODO: faire le client reservation
 
         fermer();
     }
