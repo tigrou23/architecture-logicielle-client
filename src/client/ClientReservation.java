@@ -13,7 +13,6 @@ public class ClientReservation extends Client{
 
     public void lancer() throws IOException {
 
-        //TODO: faire le client reservation
         System.out.println("*** Bienvenue dans le client de réservation de document ***");
 
         String ligne;

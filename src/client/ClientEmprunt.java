@@ -1,5 +1,7 @@
 package client;
 
+import codage.Codage;
+
 import java.io.IOException;
 
 public class ClientEmprunt extends Client{
@@ -11,9 +13,25 @@ public class ClientEmprunt extends Client{
 
     public void lancer() throws IOException {
 
-        //TODO: faire le client emprunt
+        System.out.println("*** Bienvenue dans le client d'emprunt de document ***");
+
+        String ligne;
+        ligne = Codage.decode(getSin().readLine());
+        System.out.println(ligne);
+
+        ligne = getClavier().readLine();
+        getSout().println(Codage.encode(ligne));
+
+        ligne = Codage.decode(getSin().readLine());
+        System.out.println(ligne);
+
+        ligne = getClavier().readLine();
+        getSout().println(Codage.encode(ligne));
+
+        System.out.println(Codage.decode(getSin().readLine()));
 
         fermer();
+
     }
 
     public static void main(String[] args) throws IOException {
