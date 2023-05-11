@@ -16,6 +16,13 @@ public class ClientEmprunt extends Client{
         System.out.println("*** Bienvenue dans le client d'emprunt de document ***");
 
         String ligne;
+
+        //TODO: renseigner le numéro de port dans la ligne de commande
+        //TODO: faire un cycle permanent
+        //TODO: while true (break) jusqu'à l'arrêt (TD4) soit avec le clavier ou fermeture de la connexion pour ne pas écrire toutes les questions
+        //TODO: faire un seul fichier Client.
+        //TODO: faire un batch (ligne de commande) pour lancer le client en renseignant le port dans la ligne
+
         ligne = Codage.decode(getSin().readLine());
         System.out.println(ligne);
 
