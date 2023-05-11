@@ -1,5 +1,7 @@
 package client;
 
+import codage.Codage;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -8,12 +10,14 @@ import java.util.Properties;
 
 //TODO : je suis pas sur de l'archi. Je pense qu'on doit faire des Threads. À voir avec le prof
 
-public abstract class Client {
+public class Client {
     private BufferedReader clavier;
     private Socket socket;
     private BufferedReader sin;
     private PrintWriter sout;
-    private final static String CONFIG_PATH = "src/ressources/config.properties";
+
+    //pour run sur Intellij : private final static String CONFIG_PATH = "src/ressources/config.properties";
+    private final static String CONFIG_PATH = "config.properties";
 
     public Client(int port) throws IOException {
         clavier = new BufferedReader(new InputStreamReader(System.in));
@@ -35,7 +39,35 @@ public abstract class Client {
         catch (IOException e2) { ; }*/
     }
 
+    public void lancementActivite() throws IOException {
+
+        String ligne;
+
+        //*** Bienvenue dans le client ... + question ***
+        ligne = Codage.decode(getSin().readLine());
+        System.out.println(ligne);
+
+        //TODO : faire une sortie à l'initiative du client
+        while (true){
+            //reponse
+            ligne = getClavier().readLine();
+            getSout().println(Codage.encode(ligne));
+
+            //question ou fin
+            ligne = Codage.decode(getSin().readLine());
+            System.out.println(ligne);
+
+            if(ligne.contains("fin - ")){
+                break;
+            }
+        }
+        fermer();
+    }
+
     public void fermer() throws IOException {
+        clavier.close();
+        sin.close();
+        sout.close();
         socket.close();
     }
 
@@ -51,4 +83,27 @@ public abstract class Client {
         return sout;
     }
 
+    public static void main(String[] args) throws IOException {
+        try {
+            if (args.length != 1) {
+                System.err.println("Usage: java Client <port du serveur>");
+                System.exit(1);
+            }
+        } catch (Exception e) {
+            System.err.println("Usage: java Client <port du serveur>");
+            System.exit(1);
+        }
+        Client client = new Client(Integer.parseInt(args[0]));
+        client.lancementActivite();
+    }
+
 }
+
+/*
+//emprunt
+//TODO: renseigner le numéro de port dans la ligne de commande
+ //TODO: faire un cycle permanent
+//TODO: while true (break) jusqu'à l'arrêt (TD4) soit avec le clavier ou fermeture de la connexion pour ne pas écrire toutes les questions
+//TODO: faire un seul fichier Client.
+//TODO: faire un batch (ligne de commande) pour lancer le client en renseignant le port dans la ligne
+ */
