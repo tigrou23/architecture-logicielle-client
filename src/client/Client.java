@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.util.Properties;
 
-//TODO : je suis pas sur de l'archi. Je pense qu'on doit faire des Threads. À voir avec le prof
+//TODO : Devons nous implémenter Runnable et faire des Threads (je ne vois pas pk) ? À voir avec le prof
 
 public class Client {
     private BufferedReader clavier;
@@ -17,7 +17,8 @@ public class Client {
     private PrintWriter sout;
 
     //pour run sur Intellij : private final static String CONFIG_PATH = "src/ressources/config.properties";
-    private final static String CONFIG_PATH = "config.properties";
+    //pour run sur ordinateur : private final static String CONFIG_PATH = "config.properties";
+    private final static String CONFIG_PATH = "src/ressources/config.properties";
 
     public Client(int port) throws IOException {
         clavier = new BufferedReader(new InputStreamReader(System.in));
@@ -47,7 +48,7 @@ public class Client {
         ligne = Codage.decode(getSin().readLine());
         System.out.println(ligne);
 
-        //TODO : faire une sortie à l'initiative du client
+        //TODO : faire une sortie à l'initiative du client (touche clavier)
         while (true){
             //reponse
             ligne = getClavier().readLine();
@@ -98,12 +99,3 @@ public class Client {
     }
 
 }
-
-/*
-//emprunt
-//TODO: renseigner le numéro de port dans la ligne de commande
- //TODO: faire un cycle permanent
-//TODO: while true (break) jusqu'à l'arrêt (TD4) soit avec le clavier ou fermeture de la connexion pour ne pas écrire toutes les questions
-//TODO: faire un seul fichier Client.
-//TODO: faire un batch (ligne de commande) pour lancer le client en renseignant le port dans la ligne
- */
