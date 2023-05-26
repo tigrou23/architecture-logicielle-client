@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.Socket;
 
 import java.io.BufferedReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 //TODO : Devons nous implémenter Runnable et faire des Threads (je ne vois pas pk) ? À voir avec le prof
@@ -15,7 +16,7 @@ public class Client {
     private BufferedReader clavier;
     private Socket socket;
     //private BufferedReader sin;
-    private InputStream sin;
+    private DataInputStream sin;
     private PrintWriter sout;
 
     //pour run sur Intellij : private final static String CONFIG_PATH = "src/ressources/config.properties";
@@ -31,7 +32,8 @@ public class Client {
         try {
             socket = new Socket(properties.getProperty("server.address"), port);
             //sin = new BufferedReader (new InputStreamReader(socket.getInputStream()));
-            sin = socket.getInputStream();
+            sin = new DataInputStream(socket.getInputStream());
+            //sin = socket.getInputStream();
             sout = new PrintWriter (socket.getOutputStream ( ), true);
             System.out.println("Connecté au serveur " + socket.getInetAddress() + ":"+ socket.getPort());
         }
@@ -72,9 +74,19 @@ public class Client {
 
         String ligne;
 
+        byte[] buffer1 = sin.readAllBytes();
         //*** Bienvenue dans le client ... + question ***
-        ligne = new String(getSin().readAllBytes());
+        byte[] buffer = new byte[1024]; // Définissez la taille du buffer de lecture
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        int bytesRead;
+        while ((bytesRead = getSin().read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        ligne = outputStream.toString("UTF-8"); // Convertissez les bytes en une variable String avec encodage UTF-8 (ou un autre encodage selon vos besoins)
         System.out.println(ligne);
+
 
         //TODO : faire une sortie à l'initiative du client (touche clavier)
         while (true){
