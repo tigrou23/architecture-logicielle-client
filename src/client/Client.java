@@ -2,6 +2,7 @@ package client;
 
 import codage.Codage;
 
+import javax.sound.sampled.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -13,7 +14,8 @@ import java.util.Properties;
 public class Client {
     private BufferedReader clavier;
     private Socket socket;
-    private BufferedReader sin;
+    //private BufferedReader sin;
+    private InputStream sin;
     private PrintWriter sout;
 
     //pour run sur Intellij : private final static String CONFIG_PATH = "src/ressources/config.properties";
@@ -28,7 +30,8 @@ public class Client {
         properties.load(inputStream);
         try {
             socket = new Socket(properties.getProperty("server.address"), port);
-            sin = new BufferedReader (new InputStreamReader(socket.getInputStream()));
+            //sin = new BufferedReader (new InputStreamReader(socket.getInputStream()));
+            sin = socket.getInputStream();
             sout = new PrintWriter (socket.getOutputStream ( ), true);
             System.out.println("Connecté au serveur " + socket.getInetAddress() + ":"+ socket.getPort());
         }
@@ -40,7 +43,7 @@ public class Client {
         catch (IOException e2) { ; }*/
     }
 
-    public void lancementActivite() throws IOException {
+/*    public void lancementActivite() throws IOException {
 
         String ligne;
 
@@ -63,7 +66,76 @@ public class Client {
             }
         }
         fermer();
+    }*/
+
+    public void lancementActivite() throws IOException {
+
+        String ligne;
+
+        //*** Bienvenue dans le client ... + question ***
+        ligne = new String(getSin().readAllBytes());
+        System.out.println(ligne);
+
+        //TODO : faire une sortie à l'initiative du client (touche clavier)
+        while (true){
+            //reponse
+            ligne = getClavier().readLine();
+            getSout().println(Codage.encode(ligne));
+
+            //question ou fin
+            lecture(getSin().readAllBytes());
+
+            if(ligne.contains("fin - ")){
+                break;
+            }
+        }
+        fermer();
     }
+    public static void lecture(byte[] data){
+        if(data[data.length-1]==0){
+            int durationSeconds = 30;
+            try {
+                // Créer un AudioInputStream à partir du tableau de bytes
+                AudioFormat audioFormat = new AudioFormat(44100, 16, 2, true, false);
+                AudioInputStream audioInputStream = new AudioInputStream(new ByteArrayInputStream(data), audioFormat, data.length);
+
+                // Ouvrir le flux audio
+                DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+                SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
+                line.open(audioFormat);
+
+                // Démarrer la lecture
+                line.start();
+
+                // Lire les données musicales depuis l'AudioInputStream et les écrire dans la ligne audio
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+
+                long startTime = System.currentTimeMillis();
+                long elapsedTime;
+                while ((bytesRead = audioInputStream.read(buffer)) != -1) {
+                    line.write(buffer, 0, bytesRead);
+                    elapsedTime = System.currentTimeMillis() - startTime;
+                    if (elapsedTime >= durationSeconds * 1000) {
+                        break;
+                    }
+                }
+
+                // Attendre la fin de la lecture
+                line.drain();
+                line.close();
+                audioInputStream.close();
+            } catch (LineUnavailableException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            String texte = new String(data);
+            System.out.println(texte);
+        }
+    }
+
+
 
     public void fermer() throws IOException {
         clavier.close();
@@ -76,7 +148,7 @@ public class Client {
         return clavier;
     }
 
-    public BufferedReader getSin() {
+    public InputStream getSin() {
         return sin;
     }
 
