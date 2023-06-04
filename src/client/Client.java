@@ -64,7 +64,7 @@ public class Client {
                 System.out.println(ligne);
             } else {
                 byte[] data = getSin().readAllBytes();
-                Codage.lectureMusique(data, 30);
+                Codage.lectureMusique(data);
                 getSout().write(Codage.encode("fin", 0));
             }
         } while (!ligne.contains("fin - "));
