@@ -13,8 +13,8 @@ import java.util.Properties;
 public class Client {
     private BufferedReader clavier;
     private Socket socket;
-    private BufferedReader sin;
-    private PrintWriter sout;
+    private InputStream sin;
+    private OutputStream sout;
 
     //pour run sur Intellij : private final static String CONFIG_PATH = "src/ressources/config.properties";
     //pour run sur ordinateur : private final static String CONFIG_PATH = "config.properties";
@@ -28,8 +28,8 @@ public class Client {
         properties.load(inputStream);
         try {
             socket = new Socket(properties.getProperty("server.address"), port);
-            sin = new BufferedReader (new InputStreamReader(socket.getInputStream()));
-            sout = new PrintWriter (socket.getOutputStream ( ), true);
+            sin = socket.getInputStream();
+            sout = socket.getOutputStream ( );
             System.out.println("Connecté au serveur " + socket.getInetAddress() + ":"+ socket.getPort());
         }
         catch (IOException e) {
@@ -45,19 +45,33 @@ public class Client {
         String ligne;
 
         //*** Bienvenue dans le client ... + question ***
-        ligne = Codage.decode(getSin().readLine());
-        System.out.println(ligne);
+        int det = getSin().read();
+        if(det==0){
+            byte[] tableau = new byte[1024];
+            int taille = getSin().read(tableau);
+            ligne = Codage.decode(tableau,taille);
+            System.out.println(ligne);
+        }
 
         //TODO : faire une sortie à l'initiative du client (touche clavier)
         while (true){
             //reponse
             ligne = getClavier().readLine();
-            getSout().println(Codage.encode(ligne));
-
+            getSout().write(Codage.encode(ligne));
+            getSout().flush();
             //question ou fin
-            ligne = Codage.decode(getSin().readLine());
-            System.out.println(ligne);
-
+            int det2 = getSin().read();
+            if(det2==0){
+                byte[] tableau = new byte[1024];
+                int taille = getSin().read(tableau);
+                ligne = Codage.decode(tableau,taille);
+                System.out.println(ligne);
+            }
+            else{
+                byte[] data = getSin().readAllBytes();
+                Codage.lectureMusique(data, 30);
+                getSout().write(Codage.encode("fin"));
+            }
             if(ligne.contains("fin - ")){
                 break;
             }
@@ -76,11 +90,11 @@ public class Client {
         return clavier;
     }
 
-    public BufferedReader getSin() {
+    public InputStream getSin() {
         return sin;
     }
 
-    public PrintWriter getSout() {
+    public OutputStream getSout() {
         return sout;
     }
 
