@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="architecture-logicielle-client:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/architecture_logicielle_client_jar</output-path>
-    <root id="archive" name="architecture-logicielle-client.jar">
-      <element id="module-output" name="architecture-logicielle-client" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/src/librairies/bttp2.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>

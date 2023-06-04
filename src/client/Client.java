@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.util.Properties;
 
-//TODO : Devons nous implémenter Runnable et faire des Threads (je ne vois pas pk) ? À voir avec le prof
 
 public class Client {
     private BufferedReader clavier;
@@ -36,8 +35,6 @@ public class Client {
             System.err.println("Impossible de se connecter au serveur");
             System.exit(1);
         }
-        /*try { if (socket != null) socket.close(); } //TODO : ici ça fait planter le programme, à étudier
-        catch (IOException e2) { ; }*/
     }
 
     public void lancementActivite() throws IOException {
@@ -53,11 +50,10 @@ public class Client {
             System.out.println(ligne);
         }
 
-        //TODO : faire une sortie à l'initiative du client (touche clavier)
         while (true){
             //reponse
             ligne = getClavier().readLine();
-            getSout().write(Codage.encode(ligne));
+            getSout().write(Codage.encode(ligne, 0));
             getSout().flush();
             //question ou fin
             int det2 = getSin().read();
@@ -70,7 +66,7 @@ public class Client {
             else{
                 byte[] data = getSin().readAllBytes();
                 Codage.lectureMusique(data, 30);
-                getSout().write(Codage.encode("fin"));
+                getSout().write(Codage.encode("fin", 0));
             }
             if(ligne.contains("fin - ")){
                 break;
