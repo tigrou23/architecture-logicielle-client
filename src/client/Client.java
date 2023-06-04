@@ -10,14 +10,14 @@ import java.util.Properties;
 
 
 public class Client {
-    private BufferedReader clavier;
+    private final BufferedReader clavier;
     private Socket socket;
     private InputStream sin;
     private OutputStream sout;
 
     //pour run sur Intellij : private final static String CONFIG_PATH = "src/ressources/config.properties";
     //pour run sur ordinateur : private final static String CONFIG_PATH = "config.properties";
-    private final static String CONFIG_PATH = "src/ressources/config.properties";
+    private static final String CONFIG_PATH = "src/ressources/config.properties";
 
     public Client(int port) throws IOException {
         clavier = new BufferedReader(new InputStreamReader(System.in));
@@ -50,28 +50,24 @@ public class Client {
             System.out.println(ligne);
         }
 
-        while (true){
+        do {
             //reponse
             ligne = getClavier().readLine();
             getSout().write(Codage.encode(ligne, 0));
             getSout().flush();
             //question ou fin
             int det2 = getSin().read();
-            if(det2==0){
+            if (det2 == 0) {
                 byte[] tableau = new byte[1024];
                 int taille = getSin().read(tableau);
-                ligne = Codage.decode(tableau,taille);
+                ligne = Codage.decode(tableau, taille);
                 System.out.println(ligne);
-            }
-            else{
+            } else {
                 byte[] data = getSin().readAllBytes();
                 Codage.lectureMusique(data, 30);
                 getSout().write(Codage.encode("fin", 0));
             }
-            if(ligne.contains("fin - ")){
-                break;
-            }
-        }
+        } while (!ligne.contains("fin - "));
         fermer();
     }
 
